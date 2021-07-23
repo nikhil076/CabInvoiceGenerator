@@ -1,9 +1,19 @@
 package CabInvoiceGenenrator;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class InvoiceGeneratorTest {
+
+	CabInvoiceGenerator cabInvoiceGenerator;
+
+	@Before
+	public void setUp() {
+		cabInvoiceGenerator = new CabInvoiceGenerator();
+	}
 
 	@Test
 	public void givenDistanceAndTime_ReturnTotalFare() {
@@ -29,5 +39,17 @@ public class InvoiceGeneratorTest {
 		Ride[] rides = { new Ride(2.0, 5), new Ride(0.01, 1) };
 		InvoiceSummary summary = cabInvoiceGenerator.returnRideSummary(rides);
 		InvoiceSummary checkSummary = new InvoiceSummary(2, 30.0);
+		assertEquals(checkSummary, summary);
+	}
+
+	@Test
+	public void givenData_ReturnInvoiceSummary(){
+		String[] userId = { "Amit", "Aman", "Sam" };
+		Ride[][] rides = { { new Ride(5.0, 12), new Ride(2.5, 6) }, { new Ride(3.0, 5), new Ride(0.01, 1) },
+				{ new Ride(10.0, 15), new Ride(2, 30) } };
+		cabInvoiceGenerator.addRideToRepository(userId, rides);
+		InvoiceSummary summary = cabInvoiceGenerator.invoiceForUser(userId[2]);
+		InvoiceSummary expectedSummary = new InvoiceSummary(rides[2].length, 165.0);
+		Assert.assertEquals(expectedSummary, summary);
 	}
 }
